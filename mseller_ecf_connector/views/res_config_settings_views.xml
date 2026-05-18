@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_mseller" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.mseller</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block"
+                     data-string="MSeller e-CF"
+                     string="MSeller e-CF"
+                     data-key="mseller_ecf_connector"
+                     groups="base.group_system">
+                    <h2>MSeller DGII e-CF</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <label for="mseller_environment"/>
+                                <div class="text-muted">
+                                    MSeller environment used for all API calls.
+                                </div>
+                                <field name="mseller_environment"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <label for="mseller_email"/>
+                                <field name="mseller_email"/>
+                                <label for="mseller_password"/>
+                                <field name="mseller_password" password="True"/>
+                                <label for="mseller_api_key"/>
+                                <field name="mseller_api_key" password="True"/>
+                            </div>
+                        </div>
+                        <div class="col-12 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <button name="action_mseller_test_connection"
+                                        type="object"
+                                        string="Test Connection"
+                                        class="btn-primary"/>
+                                <div class="text-muted mt8">
+                                    Cached idToken:
+                                    <field name="mseller_id_token" readonly="1" nolabel="1"/>
+                                    expires
+                                    <field name="mseller_token_expiration" readonly="1" nolabel="1"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
