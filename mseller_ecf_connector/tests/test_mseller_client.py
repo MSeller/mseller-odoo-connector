@@ -58,6 +58,24 @@ class TestMSellerClient(TransactionCase):
                 client.authenticate()
         p.assert_not_called()
 
+    def test_authenticate_missing_id_token_does_not_leak_response(self):
+        # The MSeller response also contains accessToken/refreshToken;
+        # those must not appear in the UserError surfaced to the UI.
+        client = MSellerClient("TesteCF", "a@b.com", "pwd", "key")
+        fake = _fake_response(
+            200,
+            {
+                "accessToken": "SECRET-ACCESS",
+                "refreshToken": "SECRET-REFRESH",
+            },
+        )
+        with patch("requests.request", return_value=fake):
+            with self.assertRaises(UserError) as cm:
+                client.authenticate()
+        message = str(cm.exception)
+        self.assertNotIn("SECRET-ACCESS", message)
+        self.assertNotIn("SECRET-REFRESH", message)
+
     # ---------- send_ecf ----------
     def test_send_ecf_success(self):
         client = MSellerClient(

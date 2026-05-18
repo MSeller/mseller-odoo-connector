@@ -13,15 +13,18 @@ Dominican Republic's [DGII](https://dgii.gov.do).
 
 ## Compatibility
 
-| Odoo series | Python | Status      |
-|-------------|--------|-------------|
-| 16.0        | 3.10+  | Supported   |
-| 17.0        | 3.10+  | Supported   |
-| 18.0        | 3.10+  | Supported   |
-| 19.0        | 3.10+  | Supported   |
+| Odoo series | Python | Branch              | Status      |
+|-------------|--------|---------------------|-------------|
+| 17.0        | 3.10+  | `main`              | Supported   |
+| 18.0        | 3.10+  | `main`              | Supported   |
+| 19.0        | 3.11+  | `main`              | Supported   |
+| 16.0        | 3.10   | (planned `16.0`)    | Not yet     |
 
-Single codebase, no per-version branches. The module uses stable Odoo
-APIs and the v16-era settings markup that all four series still render.
+The `main` branch targets Odoo **17.0 and later** in a single
+codebase — Odoo 17 changed the settings form structure to use the
+new `<app>` / `<block>` / `<setting>` tags, which are incompatible
+with the 16.0 markup. Odoo 16.0 support will land on a dedicated
+`16.0` branch (PRs welcome).
 
 No extra Python dependencies — only the `requests` library bundled
 with Odoo.
@@ -62,17 +65,24 @@ Fill in:
 | API Key      | Created at <https://ecf.mseller.app/api-keys/list> (masked in the UI).      |
 
 Save, then click **Test Connection**. On success a green toast is
-shown and the cached `idToken` + expiry hint appear under the button.
-On failure an `UserError` with the underlying reason is raised.
+shown and the cached `idToken` + expiry hint (decoded from the JWT
+`exp` claim) appear under the button. On failure a `UserError` with
+the underlying reason is raised. The action is restricted to
+Settings administrators server-side, not only in the UI.
 
 ## Security note
 
-Credentials are stored on `res.company` as plain text — Odoo's standard
-storage. **Restrict database access accordingly** (encrypted volumes,
-restricted DB users, etc.). The Settings and Companies views are
-limited to `base.group_system` (Settings administrators); no other
-group can read the configuration fields. Application-level encryption
-is on the roadmap.
+Credentials are stored on `res.company` as plain text — Odoo's
+standard storage. **Restrict database access accordingly** (encrypted
+volumes, restricted DB users, etc.). The MSeller fields
+(`mseller_email`, `mseller_password`, `mseller_api_key`,
+`mseller_environment`, `mseller_id_token`,
+`mseller_token_expiration`) carry `groups="base.group_system"` at
+the model level, so non-admins cannot read them via ORM or RPC even
+if they have read access to `res.company`. The Settings and
+Companies views are gated by the same group. The Test Connection
+action also enforces `has_group("base.group_system")` server-side.
+Application-level encryption is on the roadmap.
 
 ## What the Python client exposes
 
@@ -132,8 +142,14 @@ All HTTP calls are mocked, so no network access is required.
 Pull requests are welcome. Please:
 
 - Open an issue first for sizeable changes so we can align on scope.
-- Keep new code compatible with Odoo 16 → 19 (no `<setting>` tags,
-  no `invisible="expr"` boolean syntax, no v17+-only ORM helpers).
+- Target the `main` branch for Odoo 17 / 18 / 19 work, and the
+  (planned) `16.0` branch for Odoo 16-specific work — they use
+  fundamentally different settings-view markup.
+- Keep new code compatible with the entire range supported by the
+  branch you're targeting. On `main`: stick to APIs that exist on
+  Odoo 17.0; avoid v18/19-only ORM helpers without a fallback. On
+  `16.0`: use the legacy `<div class="app_settings_block">` markup
+  and `attrs="{...}"` boolean syntax.
 - Run the test suite locally before submitting.
 
 ## License
