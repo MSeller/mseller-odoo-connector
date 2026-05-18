@@ -5,51 +5,43 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="base.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[hasclass('settings')]" position="inside">
-                <div class="app_settings_block"
-                     data-string="MSeller e-CF"
+            <xpath expr="//form" position="inside">
+                <app data-string="MSeller e-CF"
                      string="MSeller e-CF"
-                     data-key="mseller_ecf_connector"
+                     name="mseller_ecf_connector"
                      groups="base.group_system">
-                    <h2>MSeller DGII e-CF</h2>
-                    <div class="row mt16 o_settings_container">
-                        <div class="col-12 col-lg-6 o_setting_box">
-                            <div class="o_setting_left_pane"/>
-                            <div class="o_setting_right_pane">
-                                <label for="mseller_environment"/>
-                                <div class="text-muted">
-                                    MSeller environment used for all API calls.
-                                </div>
-                                <field name="mseller_environment"/>
+                    <block title="MSeller DGII e-CF" name="mseller_ecf_connection">
+                        <setting id="mseller_environment_setting"
+                                 string="Environment"
+                                 help="MSeller environment used for all API calls.">
+                            <field name="mseller_environment"/>
+                        </setting>
+                        <setting id="mseller_credentials_setting"
+                                 string="Credentials"
+                                 help="Email and password authenticate the MSeller account; the API Key is created at https://ecf.mseller.app/api-keys/list.">
+                            <label for="mseller_email"/>
+                            <field name="mseller_email"/>
+                            <label for="mseller_password"/>
+                            <field name="mseller_password" password="True"/>
+                            <label for="mseller_api_key"/>
+                            <field name="mseller_api_key" password="True"/>
+                        </setting>
+                        <setting id="mseller_test_connection_setting"
+                                 string="Test Connection"
+                                 help="Authenticate against MSeller and cache the resulting idToken.">
+                            <button name="action_mseller_test_connection"
+                                    type="object"
+                                    string="Test Connection"
+                                    class="btn-primary"/>
+                            <div class="text-muted mt8">
+                                Cached idToken:
+                                <field name="mseller_id_token" readonly="1" nolabel="1"/>
+                                expires
+                                <field name="mseller_token_expiration" readonly="1" nolabel="1"/>
                             </div>
-                        </div>
-                        <div class="col-12 col-lg-6 o_setting_box">
-                            <div class="o_setting_left_pane"/>
-                            <div class="o_setting_right_pane">
-                                <label for="mseller_email"/>
-                                <field name="mseller_email"/>
-                                <label for="mseller_password"/>
-                                <field name="mseller_password" password="True"/>
-                                <label for="mseller_api_key"/>
-                                <field name="mseller_api_key" password="True"/>
-                            </div>
-                        </div>
-                        <div class="col-12 o_setting_box">
-                            <div class="o_setting_right_pane">
-                                <button name="action_mseller_test_connection"
-                                        type="object"
-                                        string="Test Connection"
-                                        class="btn-primary"/>
-                                <div class="text-muted mt8">
-                                    Cached idToken:
-                                    <field name="mseller_id_token" readonly="1" nolabel="1"/>
-                                    expires
-                                    <field name="mseller_token_expiration" readonly="1" nolabel="1"/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                        </setting>
+                    </block>
+                </app>
             </xpath>
         </field>
     </record>
