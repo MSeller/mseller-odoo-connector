@@ -147,8 +147,16 @@ class MSellerClient:
             data.get("AuthenticationResult") or {}
         ).get("IdToken")
         if not id_token:
+            # Log the response shape (keys only, no token values) for
+            # operators; surface a generic message to end users to
+            # avoid leaking any accessToken/refreshToken that may be
+            # present in the payload.
+            _logger.warning(
+                "MSeller authentication response missing idToken; keys=%s",
+                sorted(data.keys()) if isinstance(data, dict) else type(data).__name__,
+            )
             raise UserError(
-                _("MSeller authentication response is missing idToken: %s") % data
+                _("MSeller authentication response did not include an idToken.")
             )
         self.id_token = id_token
         return data

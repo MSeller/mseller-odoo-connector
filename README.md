@@ -142,8 +142,14 @@ All HTTP calls are mocked, so no network access is required.
 Pull requests are welcome. Please:
 
 - Open an issue first for sizeable changes so we can align on scope.
-- Keep new code compatible with Odoo 16 → 19 (no `<setting>` tags,
-  no `invisible="expr"` boolean syntax, no v17+-only ORM helpers).
+- Target the `main` branch for Odoo 17 / 18 / 19 work, and the
+  (planned) `16.0` branch for Odoo 16-specific work — they use
+  fundamentally different settings-view markup.
+- Keep new code compatible with the entire range supported by the
+  branch you're targeting. On `main`: stick to APIs that exist on
+  Odoo 17.0; avoid v18/19-only ORM helpers without a fallback. On
+  `16.0`: use the legacy `<div class="app_settings_block">` markup
+  and `attrs="{...}"` boolean syntax.
 - Run the test suite locally before submitting.
 
 ## License
