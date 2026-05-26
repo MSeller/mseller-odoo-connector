@@ -6,7 +6,8 @@
         <field name="inherit_id" ref="base.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//form" position="inside">
-                <app data-string="MSeller e-CF"
+                <div class="app_settings_block"
+                     data-string="MSeller e-CF"
                      string="MSeller e-CF"
                      name="mseller_ecf_connector"
                      groups="base.group_system">
@@ -41,7 +42,7 @@
                             </div>
                         </setting>
                     </block>
-                </app>
+                </div>
             </xpath>
         </field>
     </record>
